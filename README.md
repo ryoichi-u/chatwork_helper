@@ -1,0 +1,23 @@
+## 概要
+
+チャットワークの機能拡張です
+
+## 機能一覧
+
+行の先頭で以下のショートカットを打つことで利用可能です
+
+内容 | ショートカット | 備考
+--- | --- | ---
+ 全員toを先頭以外でも使えるようにする | `@@ + enter` | 要望 http://goo.gl/ypKUnv 
+ toListを開く | `:to + enter` | 右側のタスク作成でもOK
+ 全て既読にするボタン付ける | なし | ルーム一覧の上にボタン
+ [info][/info]などのタグをカンタンに作る | `:info + enter` | info, code, titleに対応
+ 検索窓に移る | `:f + enter`
+ メッセージに書いていた文字をタスクに移す | `:task + enter`
+ fileUploadを開ける | `:file + enter`
+ 自分へのto以外は隠す  | `:me + enter` | 要望 http://goo.gl/tdJJhd
+ 自分の送信以外は隠す | `:mine + enter` 
+ 隠したメッセージを戻す | `:all + enter` 
+
+## 導入
+
