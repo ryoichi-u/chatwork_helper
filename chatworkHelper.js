@@ -1,15 +1,14 @@
-
 // ==UserScript==
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @version 1.3
 /* load jQuery */
-// @require https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // ==/UserScript==
 
 (function (callback) {
   var script = document.createElement("script");
-  script.setAttribute("src", "//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js");
+  script.setAttribute("src", "//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js");
   script.addEventListener('load', function() {
     var script = document.createElement("script");
     script.textContent = "(" + callback.toString() + ")(jQuery.noConflict(true));";
