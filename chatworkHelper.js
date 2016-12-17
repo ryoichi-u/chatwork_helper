@@ -1,15 +1,14 @@
-
 // ==UserScript==
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @version 1.3
 /* load jQuery */
-// @require https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // ==/UserScript==
 
 (function (callback) {
   var script = document.createElement("script");
-  script.setAttribute("src", "//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js");
+  script.setAttribute("src", "//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js");
   script.addEventListener('load', function() {
     var script = document.createElement("script");
     script.textContent = "(" + callback.toString() + ")(jQuery.noConflict(true));";
@@ -20,11 +19,10 @@
   var _chatText = $('#_chatText');
   var _taskNameInput = $('#_taskNameInput');
   
-  // shortcut for main massege area
-  _chatText.on('keypress', function(e) {
-    // @+@+enter
-    if (e.keyCode == 13) {
-      if (/(^|\n)[@＠]{2}/.test(_chatText.val())) {
+  var shortcutConf = [
+    {
+      key: '[@＠]{2}',
+      action: function() {
         var isInit = true;
         var setToAllUser = function() {
           if (isInit) {
@@ -34,133 +32,121 @@
             return;
           }
           _chatText.click();
+
           var userList = $('#_toList ._cwLTList li');
           if (userList.length == 0) {
             return;
           }
+
           var toList = [];
           userList.each(function() {
             toList.push('[To:' + $(this).data('cwui-lt-value') + ']');
           });
          
-          if (toList.length > 0) {
-            var val = _chatText.val();
-            _chatText.val(val.replace(/[@＠]{2}/, toList.join(' ')));
-          }
-          _chatText.focus();
+          _chatText.val(_chatText.val().replace(/[@＠]{2}/, toList.join(' '))).focus();
         }
         setToAllUser();
       }
-
-      // show toList ':to'+enter
-      if (/(^|\n):to($|\n)/.test(_chatText.val())) {
-        var openToList = function() {
-            $('#_to').click();
-            var val = _chatText.val();
-            _chatText.val(val.replace(/:to/, ''));
-        }
-        openToList();
+    },
+    { 
+      key: ':to',
+      action: function() {
+        $('#_to').click();
+        _chatText.val(_chatText.val().replace(/:to/, ''));
       }
-
-      // show fileUpload ':file'+enter
-      if (/(^|\n):file($|\n)/.test(_chatText.val())) {
-        var openFileUpload = function() {
-            $('#_file').click();
-            var val = _chatText.val();
-            _chatText.val(val.replace(/:file/, ''));
-        }
-        openFileUpload();
+    },
+    {
+      key: ':file',
+      action: function() {
+        $('#_file').click();
+        _chatText.val(_chatText.val().replace(/:file/, ''));
       }
-
-      //  search ':f'+enter
-      if (/(^|\n):f($|\n)/.test(_chatText.val())) {
-        var showAllMessage = function() {
-            $("#_search").focus();
-            var val = _chatText.val();
-            _chatText.val(val.replace(/:f/, ''));
-        }
-        showAllMessage();
+    },
+    {
+      key: ':f',
+      action: function() {
+        $("#_search").focus();
+        _chatText.val(_chatText.val().replace(/:f/, ''));
       }
-
-      
-      // show onli to me ':me'+enter
-      if (/(^|\n):me($|\n)/.test(_chatText.val())) {
-        var onlyMe = function() {
-            $("._message").show();
-            $("._message:not(.chatTimeLineMessageMention)").hide();
-            var val = _chatText.val();
-            _chatText.val(val.replace(/:me/, ''));
-        }
-        onlyMe();
+    },
+    {
+      key: ':me',
+      action: function() {
+        $("._message").show();
+        $("._message:not(.chatTimeLineMessageMention)").hide();
+        _chatText.val(_chatText.val().replace(/:me/, ''));
       }
-      // show only mine ':mine'+enter
-      if (/(^|\n):mine($|\n)/.test(_chatText.val())) {
-        var onlyMine = function() {
-            $("._message").show();
-            $("._message:not(.chatTimeLineMessageMine )").hide();
-            var val = _chatText.val();
-            _chatText.val(val.replace(/:mine/, ''));
-        }
-        onlyMine();
+    },
+    {
+      key: ':mine',
+      action: function() {
+        $("._message").show();
+        $("._message:not(.chatTimeLineMessageMine )").hide();
+        _chatText.val(_chatText.val().replace(/:mine/, ''));
       }
-      // show all ':all'+enter
-      if (/(^|\n):all($|\n)/.test(_chatText.val())) {
-        var showAllMessage = function() {
-            $("._message").show();
-            var val = _chatText.val();
-            _chatText.val(val.replace(/:all/, ''));
-        }
-        showAllMessage();
+    },
+    {
+      key: ':all',
+      action: function() {
+        $("._message").show();
+        _chatText.val(_chatText.val().replace(/:all/, ''));
       }
+    },
+    {
+      key: ':task',
+      action: function() {          
+        _taskNameInput.val(_chatText.val().replace(/:task/, ''));
+        _chatText.val('');
+        _taskNameInput.focus();
+      }
+    },
+    {
+      key: ':to',
+      action: function() {
+        $('#_inchargeEmpty').click();
+        _taskNameInput.val(_taskNameInput.val().replace(/:to/, ''));
+      }
+    },
+  ];
 
 
-      // message send to task ':task'+enter
-      if (/(^|\n):task($|\n)/.test(_chatText.val())) {
-        var openToList = function() {          
-            var val = _chatText.val();
-            
-            _taskNameInput.val(val.replace(/:task/, ''));
-            _chatText.val('');
-            _taskNameInput.focus();
-        }
-        openToList();
-      }
-      
-
-      //make tag ex) ':info'+enter
-      var tags = ['info', 'title', 'code'];
-      tags.forEach(function(tag) {
-        var regTagMatch = new RegExp("(^|\n):" + tag +"($|\n)");
-        var regTagReplace = new RegExp(":" + tag);
-    
-        if (_chatText.val().match(regTagMatch)) {
-          var makeInfoTag = function() {
-            var val = _chatText.val();
-            _chatText.val(val.replace(regTagReplace, "[" + tag + "]\n[/" + tag + "]"));
-          }
-          makeInfoTag();
-        }
-      });
+  // shortcut for main massege area
+  _chatText.on('keypress', function(e) {
+    if (e.keyCode != 13) {
+        return;
     }
 
-  });
+    // each action 
+    shortcutConf.forEach(function(conf) {
+      var regMatch = new RegExp("(^|\n)" + conf.key +"($|\n)");
+      if (_chatText.val().match(regMatch)) {
+        conf.action();
+      }
+    });
 
+    //make tag ex) ':info'+enter
+    ['info', 'title', 'code'].forEach(function(tag) {
+      var regTagMatch = new RegExp("(^|\n):" + tag +"($|\n)");
+      var regTagReplace = new RegExp(":" + tag);
+    
+      if (_chatText.val().match(regTagMatch)) {
+        var makeInfoTag = function() {
+          var val = _chatText.val();
+          _chatText.val(val.replace(regTagReplace, "[" + tag + "]\n[/" + tag + "]"));
+        }
+        makeInfoTag();
+      }
+    });
+  });
 
 
   // shortcut maketask area
   _taskNameInput.on('keypress', function(e) {
     // show toList ':to'+enter
     if (e.keyCode == 13 && /(^|\n):to($|\n)/.test(_taskNameInput.val())) {
-      var openToList = function() {
-          $('#_inchargeEmpty').click();
-          var val = _taskNameInput.val();
-          _taskNameInput.val(val.replace(/:to/, ''));
-      }
-      openToList();
+      shortcutAction.openTaskAssigneeList();
     }
   });
-
-
 
 
   // all openedButton
