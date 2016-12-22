@@ -5,7 +5,7 @@
 # 導入
 
 Chrome ウェブストアに登録してあるのでご自身のブラウザに登録してください
-https://chrome.google.com/webstore/detail/chatworkhelper/ddejlbfddlhkoaomiocpbjmpnjkbcnkj/related
+https://chrome.google.com/webstore/detail/chatworkhelper/ddejlbfddlhkoaomiocpbjmpnjkbcnkj
 
 # 機能一覧
 
