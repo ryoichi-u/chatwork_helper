@@ -1,0 +1,14 @@
+{
+    "manifest_version": 2,
+    "name": "chatwork lstamp",
+    "version": "1.0.3",
+    "homepage_url": "https://github.com/uenoryoichi/chatwork_helper-1",
+    "content_scripts": [{
+        "matches": [
+            "https://www.chatwork.com/*",
+            "https://kcw.kddi.ne.jp/*"
+        ],
+        "js": ["chatwork_lstamp.js"]
+    }],
+    "author": "ryoichi-u"
+}
