@@ -16,7 +16,7 @@
     document.body.appendChild(script);
   }, false);
   document.body.appendChild(script);
-})(function ($) {
+}(function ($) {
   var _chatText = $('#_chatText');
   var _taskNameInput = $('#_taskNameInput');
   
@@ -163,4 +163,5 @@
         $.getJSON('https://'+window.location.hostname+'/gateway.php?cmd=read&myid='+myid+'&_v='+client_ver+'&_av=4&_t='+ACCESS_TOKEN+'&ln=ja&room_id='+rid+'&last_chhkkt_id='+$('._message[data-rid='+rid+']:last').data('mid')+'&_='+d.getDate());
     });
   });
-});
+}));
+
