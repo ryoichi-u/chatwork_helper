@@ -19,7 +19,7 @@
 })(function ($) {
   var _chatText = $('#_chatText');
   var _taskNameInput = $('#_taskNameInput');
-  
+
   var shortcutConf = [
     {
       key: '[@＠]{2}',
@@ -43,13 +43,13 @@
           userList.each(function() {
             toList.push('[To:' + $(this).data('cwui-lt-value') + ']');
           });
-         
+
           _chatText.val(_chatText.val().replace(/[@＠]{2}/, toList.join(' '))).focus();
-        }
+        };
         setToAllUser();
       }
     },
-    { 
+    {
       key: ':to',
       action: function() {
         $('#_to').click();
@@ -95,7 +95,7 @@
     },
     {
       key: ':task',
-      action: function() {          
+      action: function() {
         _taskNameInput.val(_chatText.val().replace(/:task/, ''));
         _chatText.val('');
         _taskNameInput.focus();
@@ -117,7 +117,7 @@
         return;
     }
 
-    // each action 
+    // each action
     shortcutConf.forEach(function(conf) {
       var regMatch = new RegExp("(^|\n)" + conf.key +"($|\n)");
       if (_chatText.val().match(regMatch)) {
@@ -129,12 +129,12 @@
     ['info', 'title', 'code'].forEach(function(tag) {
       var regTagMatch = new RegExp("(^|\n):" + tag +"($|\n)");
       var regTagReplace = new RegExp(":" + tag);
-    
+
       if (_chatText.val().match(regTagMatch)) {
         var makeInfoTag = function() {
           var val = _chatText.val();
           _chatText.val(val.replace(regTagReplace, "[" + tag + "]\n[/" + tag + "]"));
-        }
+        };
         makeInfoTag();
       }
     });
