@@ -2,7 +2,7 @@
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @match        https://kcw.kddi.ne.jp/*
-// @version      1.5.1
+// @version      1.5.2
 /* load jQuery */
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // ==/UserScript==
@@ -158,7 +158,7 @@
   $('#_openedButton').on('click', function(e) {
     var d=new Date();
     var rid;
-    $('.roomUnread').each(function(i, element){
+    $('li.roomListItem:has(p.roomListItem__roomName--unread)').each(function(i, element){
         rid = $(element).data('rid');
         $.getJSON('https://'+window.location.hostname+'/gateway.php?cmd=read&myid='+myid+'&_v='+client_ver+'&_av=4&_t='+ACCESS_TOKEN+'&ln=ja&room_id='+rid+'&last_chhkkt_id='+$('._message[data-rid='+rid+']:last').data('mid')+'&_='+d.getDate());
     });
