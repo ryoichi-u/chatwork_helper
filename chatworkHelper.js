@@ -2,7 +2,7 @@
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @match        https://kcw.kddi.ne.jp/*
-// @version      1.5.1
+// @version      1.5.2
 /* load jQuery */
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // ==/UserScript==
