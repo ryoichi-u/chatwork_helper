@@ -153,7 +153,7 @@
   // all openedButton
   var allOpenedButton = '<button id="_openedButton" style="margin-left:10px" class="button btnPrimary">全て既読</button>';
   $('#_openedButton').remove();
-  $('#_sideContentTitleText').append(allOpenedButton);
+  $('#_sideContentTitle').append(allOpenedButton);
 
   $('#_openedButton').on('click', function(e) {
     var d=new Date();
