@@ -1,0 +1,17 @@
+{
+  "name": "chatwork_helper",
+  "version": "1.0.0",
+  "main": "chatworkHelper.js",
+  "repository": "git@github.com:ryoichi-u/chatwork_helper.git",
+  "author": "ryoichi-u <nogami.ueno0515@gmail.com>",
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "query-string": "^5.0.1",
+    "webpack": "^3.8.1"
+  },
+  "scripts": {
+    "webpack": "webpack --optimize-minimize",
+    "webpack-watch": "webpack --progress --colors --watch"
+  },
+  "license": "MIT"
+}
