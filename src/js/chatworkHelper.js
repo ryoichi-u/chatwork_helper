@@ -2,9 +2,7 @@
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @match        https://kcw.kddi.ne.jp/*
-// @version      1.5.6
-/* load jQuery */
-// @require https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
+// @version      2.0.0
 // ==/UserScript==
 var $ = require('jquery');
 const queryString = require('query-string');
