@@ -1,0 +1,8 @@
+{
+  "name": "chatwork_helper",
+  "version": "1.0.0",
+  "main": "chatworkHelper.js",
+  "repository": "git@github.com:ryoichi-u/chatwork_helper.git",
+  "author": "ryoichi-u <nogami.ueno0515@gmail.com>",
+  "license": "MIT"
+}
