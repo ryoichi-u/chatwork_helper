@@ -9,8 +9,8 @@ https://chrome.google.com/webstore/detail/chatworkhelper/ddejlbfddlhkoaomiocpbjm
 
 # Feature
 
-[日本語版](https://github.com/ryoichi-u/chatwork_helper/wiki/ja_1.0-%E6%A9%9F%E8%83%BD%E4%B8%80%E8%A6%A7)
-[All Feature](https://github.com/ryoichi-u/chatwork_helper/wiki/en_1.0-all-features)
+- [All Feature](https://github.com/ryoichi-u/chatwork_helper/wiki/en_1.0-all-features)
+- [日本語版 全機能一覧](https://github.com/ryoichi-u/chatwork_helper/wiki/ja_1.0-%E6%A9%9F%E8%83%BD%E4%B8%80%E8%A6%A7)
 
 ## Attaching `all read button` on top of room list 
 すべて既読ボタンがルーム一覧の上部に追加されます
@@ -21,6 +21,7 @@ https://chrome.google.com/webstore/detail/chatworkhelper/ddejlbfddlhkoaomiocpbjm
 
 
 ## Type shortcut key at beginning of line
+以下のコマンドを段落の先頭で打つと様々な機能が利用できます
 
 function | shortcut key | comment
 --- | --- | --- 
@@ -33,8 +34,6 @@ function | shortcut key | comment
  only show message to you | `:me + enter` | http://goo.gl/tdJJhd
  only show message from you | `:mine + enter` 
  show all message | `:all + enter` 
-
-## 以下のコマンドを段落の先頭で打つと様々な機能が利用できます
 
 内容 | ショートカット | 備考
 --- | --- | ---
@@ -52,5 +51,5 @@ function | shortcut key | comment
 
 # How to Development
 
-[日本語版](https://github.com/ryoichi-u/chatwork_helper/wiki/js_2.0-%E9%96%8B%E7%99%BA%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
-[English](https://github.com/ryoichi-u/chatwork_helper/wiki/en_2.0-how-to-development)
+- [English](https://github.com/ryoichi-u/chatwork_helper/wiki/en_2.0-how-to-development)
+- [日本語版](https://github.com/ryoichi-u/chatwork_helper/wiki/js_2.0-%E9%96%8B%E7%99%BA%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
