@@ -9,7 +9,7 @@ https://chrome.google.com/webstore/detail/chatworkhelper/ddejlbfddlhkoaomiocpbjm
 
 # Feature
 
-- [All Feature](https://github.com/ryoichi-u/chatwork_helper/wiki/en_1.0-all-features)
+- [All Feature](https://github.com/ryoichi-u/chatwork_helper/wiki/en_1.0-All-features)
 - [日本語版 全機能一覧](https://github.com/ryoichi-u/chatwork_helper/wiki/ja_1.0-%E6%A9%9F%E8%83%BD%E4%B8%80%E8%A6%A7)
 
 ## Attaching `all read button` on top of room list 
@@ -51,5 +51,5 @@ function | shortcut key | comment
 
 # How to Development
 
-- [English](https://github.com/ryoichi-u/chatwork_helper/wiki/en_2.0-how-to-development)
+- [English](https://github.com/ryoichi-u/chatwork_helper/wiki/en_2.0-How-to-development)
 - [日本語版](https://github.com/ryoichi-u/chatwork_helper/wiki/js_2.0-%E9%96%8B%E7%99%BA%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
