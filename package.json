@@ -6,6 +6,7 @@
   "author": "ryoichi-u <nogami.ueno0515@gmail.com>",
   "dependencies": {
     "jquery": "^3.2.1",
+    "query-string": "^5.0.1",
     "webpack": "^3.8.1"
   },
   "scripts": {
