@@ -107,53 +107,57 @@ var shortcutConf = [
 ];
 
 
-// shortcut for main massege area
-_chatText.on('keypress', function(e) {
-  if (e.keyCode != 13) {
-      return;
-  }
+$(function() {
 
-  // each action
-  shortcutConf.forEach(function(conf) {
-    var regMatch = new RegExp("(^|\n)" + conf.key +"($|\n)");
-    if (_chatText.val().match(regMatch)) {
-      conf.action();
+  // shortcut for main massege area
+  _chatText.on('keypress', function(e) {
+    if (e.keyCode != 13) {
+        return;
+    }
+  
+    // each action
+    shortcutConf.forEach(function(conf) {
+      var regMatch = new RegExp("(^|\n)" + conf.key +"($|\n)");
+      if (_chatText.val().match(regMatch)) {
+        conf.action();
+      }
+    });
+  
+    //make tag ex) ':info'+enter
+    ['info', 'title', 'code'].forEach(function(tag) {
+      var regTagMatch = new RegExp("(^|\n):" + tag +"($|\n)");
+      var regTagReplace = new RegExp(":" + tag);
+  
+      if (_chatText.val().match(regTagMatch)) {
+        var makeInfoTag = function() {
+          var val = _chatText.val();
+          _chatText.val(val.replace(regTagReplace, "[" + tag + "]\n[/" + tag + "]"));
+        };
+        makeInfoTag();
+      }
+    });
+  });
+  
+  
+  // shortcut maketask area
+  _taskNameInput.on('keypress', function(e) {
+    // show toList ':to'+enter
+    if (e.keyCode == 13 && /(^|\n):to($|\n)/.test(_taskNameInput.val())) {
+      shortcutAction.openTaskAssigneeList();
     }
   });
-
-  //make tag ex) ':info'+enter
-  ['info', 'title', 'code'].forEach(function(tag) {
-    var regTagMatch = new RegExp("(^|\n):" + tag +"($|\n)");
-    var regTagReplace = new RegExp(":" + tag);
-
-    if (_chatText.val().match(regTagMatch)) {
-      var makeInfoTag = function() {
-        var val = _chatText.val();
-        _chatText.val(val.replace(regTagReplace, "[" + tag + "]\n[/" + tag + "]"));
-      };
-      makeInfoTag();
-    }
+  
+  // all openedButton
+  $('#_openedButton').remove();
+  $(attachingElementSelector).after(allOpenedButton);
+  
+  $('#_openedButton').on('click', function(e) {
+    var d=new Date();
+    var rid;
+    $("li.roomListItem:has(p.roomListItem__roomName--unread)").each(function(i, element){
+        rid = $(element).data('rid');
+        $.post('https://'+window.location.hostname+'/gateway.php?cmd=read&myid='+MYID+'&_v='+CLIENT_VER+'&_av=5&ln='+LANGUAGE, {"room_id": rid,"unread":0,"last_chat_id":$('._message[data-rid='+rid+']:last').data('mid'),"_t":ACCESS_TOKEN});
+    });
   });
-});
 
-
-// shortcut maketask area
-_taskNameInput.on('keypress', function(e) {
-  // show toList ':to'+enter
-  if (e.keyCode == 13 && /(^|\n):to($|\n)/.test(_taskNameInput.val())) {
-    shortcutAction.openTaskAssigneeList();
-  }
-});
-
-// all openedButton
-$('#_openedButton').remove();
-$(attachingElementSelector).after(allOpenedButton);
-
-$('#_openedButton').on('click', function(e) {
-  var d=new Date();
-  var rid;
-  $("li.roomListItem:has(p.roomListItem__roomName--unread)").each(function(i, element){
-      rid = $(element).data('rid');
-      $.post('https://'+window.location.hostname+'/gateway.php?cmd=read&myid='+MYID+'&_v='+CLIENT_VER+'&_av=5&ln='+LANGUAGE, {"room_id": rid,"unread":0,"last_chat_id":$('._message[data-rid='+rid+']:last').data('mid'),"_t":ACCESS_TOKEN});
-  });
 });
