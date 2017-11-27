@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "chatwork helper",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "homepage_url": "https://github.com/ryoichi-u/chatwork_helper",
     "content_scripts": [{
         "matches": [

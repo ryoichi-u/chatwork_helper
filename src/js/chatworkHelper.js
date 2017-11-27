@@ -2,7 +2,7 @@
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @match        https://kcw.kddi.ne.jp/*
-// @version      2.0.0
+// @version      2.0.2
 // ==/UserScript==
 var $ = require('jquery');
 const queryString = require('query-string');
