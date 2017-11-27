@@ -2,7 +2,7 @@
 // @name         chatwork helper
 // @match        https://www.chatwork.com/*
 // @match        https://kcw.kddi.ne.jp/*
-// @version      1.5.6
+// @version      1.6.0
 /* load jQuery */
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
 // ==/UserScript==
@@ -17,6 +17,14 @@
   }, false);
   document.body.appendChild(script);
 })(function ($) {
+
+const isNewRoomList =  queryStrings().preview == 'newRoomList';
+const allOpenedButton = isNewRoomList
+  ? '<div id="_openedButton" class="roomListHeader__myChatButton"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 512 512" enable-background="new 0 0 256 256" xml:space="preserve"><polygon points="211.344,306.703 160,256 128,288 211.414,368 384,176 351.703,144 "/><path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472 c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/></svg></div>'
+  : '<button id="_openedButton" style="margin-left:10px" class="button btnPrimary">全て既読</button>';
+const attachingElementSelector = isNewRoomList ? '#_sideChatMoveMyChat' : '#_sideContentTitle';
+
+
   var _chatText = $('#_chatText');
   var _taskNameInput = $('#_taskNameInput');
 
@@ -110,6 +118,16 @@
     },
   ];
 
+  function queryStrings() {
+    var arg = new Object;
+    var pair=location.search.substring(1).split('&');
+    for(var i=0;pair[i];i++) {
+      var kv = pair[i].split('=');
+      arg[kv[0]]=kv[1];
+    }
+    return arg;
+  }
+
 
   // shortcut for main massege area
   _chatText.on('keypress', function(e) {
@@ -151,9 +169,9 @@
 
 
   // all openedButton
-  var allOpenedButton = '<button id="_openedButton" style="margin-left:10px" class="button btnPrimary">全て既読</button>';
   $('#_openedButton').remove();
-  $('#_sideContentTitle').append(allOpenedButton);
+  $(attachingElementSelector).after(allOpenedButton);
+
 
   $('#_openedButton').on('click', function(e) {
     var d=new Date();
