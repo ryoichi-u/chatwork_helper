@@ -15,9 +15,9 @@ https://chrome.google.com/webstore/detail/chatworkhelper/ddejlbfddlhkoaomiocpbjm
 ## Attaching `all read button` on top of room list 
 すべて既読ボタンがルーム一覧の上部に追加されます
 
-| Conventional UI | Beta UI |
-| --- | --- |
-| [![https://gyazo.com/00a2ffc8f37d595ec2899275c40588cf](https://i.gyazo.com/00a2ffc8f37d595ec2899275c40588cf.gif)](https://gyazo.com/00a2ffc8f37d595ec2899275c40588cf) | [![https://gyazo.com/5925496f52e6e8a79fc13157d0252af2](https://i.gyazo.com/5925496f52e6e8a79fc13157d0252af2.gif)](https://gyazo.com/5925496f52e6e8a79fc13157d0252af2) |
+| room list top |
+| --- |
+| [![https://gyazo.com/5925496f52e6e8a79fc13157d0252af2](https://i.gyazo.com/5925496f52e6e8a79fc13157d0252af2.gif)](https://gyazo.com/5925496f52e6e8a79fc13157d0252af2) |
 
 
 ## Type shortcut key at beginning of line
