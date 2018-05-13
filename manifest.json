@@ -1,14 +1,14 @@
 {
     "manifest_version": 2,
     "name": "chatwork helper",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "homepage_url": "https://github.com/ryoichi-u/chatwork_helper",
     "content_scripts": [{
         "matches": [
             "https://www.chatwork.com/*",
             "https://kcw.kddi.ne.jp/*"
         ],
-        "js": ["chatworkHelper.js"]
+        "js": ["jquery-3.3.1.min.js", "chatworkHelper.js"]
     }],
     "author": "ryoichi-u"
 }
