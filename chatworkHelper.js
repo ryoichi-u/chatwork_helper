@@ -30,29 +30,7 @@
     {
       key: '[@＠]{2}',
       action: function() {
-        var isInit = true;
-        var setToAllUser = function() {
-          if (isInit) {
-            isInit = false;
-            $('#_to').click();
-            setTimeout(setToAllUser, 300);
-            return;
-          }
-          _chatText.click();
-
-          var userList = $('#_toList ._cwLTList li');
-          if (userList.length == 0) {
-            return;
-          }
-
-          var toList = [];
-          userList.each(function() {
-            toList.push('[To:' + $(this).data('cwui-lt-value') + ']');
-          });
-
-          _chatText.val(_chatText.val().replace(/[@＠]{2}/, toList.join(' '))).focus();
-        };
-        setToAllUser();
+        _chatText.val(_chatText.val().replace(/[@＠]{2}/, '[toall]')).focus();
       }
     },
     {
