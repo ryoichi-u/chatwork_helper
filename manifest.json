@@ -1,14 +1,25 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "chatwork helper",
-    "version": "2.3.0",
+    "version": "3.0.0",
     "homepage_url": "https://github.com/ryoichi-u/chatwork_helper",
+    "host_permissions": [
+        "https://www.chatwork.com/*",
+        "https://kcw.kddi.ne.jp/*"
+    ],
     "content_scripts": [{
         "matches": [
             "https://www.chatwork.com/*",
             "https://kcw.kddi.ne.jp/*"
         ],
-        "js": ["jquery-3.3.1.min.js", "chatworkHelper.js"]
+        "js": ["loader.js"]
+    }],
+    "web_accessible_resources": [{
+        "resources": ["jquery-3.3.1.min.js", "chatworkHelper.js"],
+        "matches": [
+            "https://www.chatwork.com/*",
+            "https://kcw.kddi.ne.jp/*"
+        ]
     }],
     "author": "ryoichi-u"
 }
