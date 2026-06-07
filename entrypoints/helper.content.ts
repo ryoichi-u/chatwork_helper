@@ -7,18 +7,24 @@ import { SELECTORS } from '../src/dom/selectors';
 import { waitForElement } from '../src/dom/waitForElement';
 import { initFavorites } from '../src/favorites/controller';
 import { dispatchChatShortcuts, dispatchTaskShortcuts } from '../src/shortcuts/dispatcher';
+import { initMentionSuggest } from '../src/suggest/controller';
 
 /**
  * ISOLATED world で動く本体。
  * - チャット/タスク入力欄のショートカット（Enter トリガ）
  * - ルーム一覧上部の全既読ボタン
  * - お気に入り・あとで読む（Issue #5）
+ * - @ メンションサジェスト（Issue #2 PoC）
  */
 export default defineContentScript({
   matches: ['https://www.chatwork.com/*', 'https://kcw.kddi.ne.jp/*'],
   runAt: 'document_idle',
   async main() {
     const dom = createChatworkDom(document);
+
+    // @ メンションサジェスト（Issue #2）。ショートカットより先に keydown を捕捉し、
+    // サジェスト確定の Enter がショートカット判定へ伝播しないようにする。
+    initMentionSuggest(document);
 
     // 入力欄は SPA 再レンダリングで差し替わる可能性があるため document へ委譲する
     document.addEventListener(

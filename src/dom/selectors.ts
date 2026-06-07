@@ -11,6 +11,13 @@ export const SELECTORS = {
   search: '#_search',
   /** TO リストを開くボタン */
   toListButton: '#_to',
+  /**
+   * TO リスト（ルームメンバー）のコンテナ（Issue #2）。
+   * ⚠ 実 Chatwork の DOM に合わせて要スモーク検証。
+   */
+  toList: '#_toList',
+  /** TO リスト内のメンバー行（data-account-id を持つ要素） */
+  toListMember: '#_toList [data-account-id]',
   /** ファイルアップロードを開くボタン */
   fileUploadButton: '#_file',
   /** タスク担当者リストを開くボタン */
