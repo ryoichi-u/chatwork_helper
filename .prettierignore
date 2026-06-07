@@ -1,0 +1,9 @@
+node_modules/
+.output/
+.wxt/
+playwright-report/
+test-results/
+chatworkHelper.js
+jquery-3.3.1.min.js
+manifest.json
+package-lock.json
