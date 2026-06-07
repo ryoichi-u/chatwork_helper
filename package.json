@@ -14,12 +14,17 @@
     "compile": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "wxt build && playwright test --project=e2e",
+    "test:e2e:headed": "wxt build && HEADED=1 playwright test --project=e2e --headed",
+    "smoke:auth": "node e2e/smoke.setup.ts",
+    "smoke": "wxt build && playwright test --project=smoke",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "@playwright/test": "1.60.0",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "happy-dom": "20.10.2",

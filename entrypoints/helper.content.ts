@@ -26,10 +26,17 @@ export default defineContentScript({
         const target = event.target;
         if (!(target instanceof HTMLElement)) return;
 
+        // コマンドが一致したら Enter のデフォルト動作（改行挿入・送信）を抑止する。
+        // 一致しない通常入力時は何もせず Chatwork 本来の挙動に委ねる。
+        let matched = false;
         if (target.matches(SELECTORS.chatText)) {
-          dispatchChatShortcuts(dom);
+          matched = dispatchChatShortcuts(dom);
         } else if (target.matches(SELECTORS.taskNameInput)) {
-          dispatchTaskShortcuts(dom);
+          matched = dispatchTaskShortcuts(dom);
+        }
+        if (matched) {
+          event.preventDefault();
+          event.stopPropagation();
         }
       },
       true,

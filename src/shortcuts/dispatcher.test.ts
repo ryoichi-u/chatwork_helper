@@ -41,15 +41,21 @@ describe('buildTriggerRegExp', () => {
 describe('dispatchChatShortcuts', () => {
   it('@@ → [toall] に置換してフォーカスする', () => {
     const f = fakeDom('@@');
-    dispatchChatShortcuts(f.dom);
+    expect(dispatchChatShortcuts(f.dom)).toBe(true);
     expect(f.chat()).toBe('[toall]');
     expect(f.calls).toContain('focusChatText');
   });
 
-  it('行中の @@ では発火しない', () => {
+  it('行中の @@ では発火しない（matched=false）', () => {
     const f = fakeDom('mail@@example.com');
-    dispatchChatShortcuts(f.dom);
+    expect(dispatchChatShortcuts(f.dom)).toBe(false);
     expect(f.chat()).toBe('mail@@example.com');
+    expect(f.calls).toHaveLength(0);
+  });
+
+  it('コマンドを含まない通常テキストは matched=false', () => {
+    const f = fakeDom('こんにちは');
+    expect(dispatchChatShortcuts(f.dom)).toBe(false);
     expect(f.calls).toHaveLength(0);
   });
 
@@ -128,14 +134,14 @@ describe('dispatchChatShortcuts', () => {
 describe('dispatchTaskShortcuts', () => {
   it('タスク入力欄の :to → 担当者リストを開いてコマンドを除去する', () => {
     const f = fakeDom('', 'レビュー依頼\n:to');
-    dispatchTaskShortcuts(f.dom);
+    expect(dispatchTaskShortcuts(f.dom)).toBe(true);
     expect(f.calls).toContain('openAssigneeList');
     expect(f.task()).toBe('レビュー依頼\n');
   });
 
-  it(':to を含まない場合は何もしない', () => {
+  it(':to を含まない場合は何もしない（matched=false）', () => {
     const f = fakeDom('', 'レビュー依頼');
-    dispatchTaskShortcuts(f.dom);
+    expect(dispatchTaskShortcuts(f.dom)).toBe(false);
     expect(f.calls).toHaveLength(0);
   });
 });

@@ -1,6 +1,9 @@
 # OS
 *.DS_Store
 
+# Claude Code (local)
+.claude/
+
 # Dependencies
 node_modules/
 
