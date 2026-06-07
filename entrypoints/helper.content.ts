@@ -5,12 +5,14 @@ import { requestCredentials } from '../src/bridge/credentials';
 import { createChatworkDom } from '../src/dom/chatworkDom';
 import { SELECTORS } from '../src/dom/selectors';
 import { waitForElement } from '../src/dom/waitForElement';
+import { initFavorites } from '../src/favorites/controller';
 import { dispatchChatShortcuts, dispatchTaskShortcuts } from '../src/shortcuts/dispatcher';
 
 /**
  * ISOLATED world で動く本体。
  * - チャット/タスク入力欄のショートカット（Enter トリガ）
  * - ルーム一覧上部の全既読ボタン
+ * - お気に入り・あとで読む（Issue #5）
  */
 export default defineContentScript({
   matches: ['https://www.chatwork.com/*', 'https://kcw.kddi.ne.jp/*'],
@@ -49,6 +51,9 @@ export default defineContentScript({
     attachAllReadButton(document, () => {
       void markAllRoomsRead();
     });
+
+    // お気に入り・あとで読む（Issue #5）
+    initFavorites(document, window.location.hostname);
   },
 });
 

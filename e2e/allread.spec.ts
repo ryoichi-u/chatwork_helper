@@ -12,8 +12,11 @@ test.beforeEach(async ({ page, gatewayRequests }) => {
 test('全既読ボタンがルーム一覧上部に設置される', async ({ page }) => {
   const button = page.locator('#_openedButton');
   await expect(button).toBeVisible();
-  // マイチャットボタンの直後に挿入されている
-  await expect(page.locator('#_sideChatMoveMyChat + #_openedButton')).toHaveCount(1);
+  // マイチャットボタンと同じヘッダ（兄弟）に挿入されている
+  // （お気に入りトグルボタンも隣接するため厳密な直後隣接は問わない）
+  await expect(
+    page.locator('#_sideChatMoveMyChat ~ #_openedButton, #_sideChatMoveMyChat + * #_openedButton'),
+  ).toHaveCount(1);
 });
 
 test('全既読ボタンのクリックで未読ルームのみ既読化 POST が飛ぶ', async ({
