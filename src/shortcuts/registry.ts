@@ -1,4 +1,4 @@
-import { replaceToall } from './replaceToall';
+import { stripCommandWithCursor, toallWithCursor } from './cursor';
 import { stripCommand } from './stripCommand';
 import { extractTaskName } from './moveToTask';
 import type { Shortcut } from './types';
@@ -12,7 +12,8 @@ export const chatShortcuts: Shortcut[] = [
     // 全員宛て [toall] の短縮形
     key: '[@＠]{2}',
     run(dom) {
-      dom.setChatText(replaceToall(dom.getChatText()));
+      const { text, cursor } = toallWithCursor(dom.getChatText(), dom.getChatCursor());
+      dom.setChatText(text, cursor);
       dom.focusChatText();
     },
   },
@@ -21,7 +22,12 @@ export const chatShortcuts: Shortcut[] = [
     key: ':to',
     run(dom) {
       dom.openToList();
-      dom.setChatText(stripCommand(dom.getChatText(), ':to'));
+      const { text, cursor } = stripCommandWithCursor(
+        dom.getChatText(),
+        ':to',
+        dom.getChatCursor(),
+      );
+      dom.setChatText(text, cursor);
     },
   },
   {
@@ -29,7 +35,12 @@ export const chatShortcuts: Shortcut[] = [
     key: ':file',
     run(dom) {
       dom.openFileUpload();
-      dom.setChatText(stripCommand(dom.getChatText(), ':file'));
+      const { text, cursor } = stripCommandWithCursor(
+        dom.getChatText(),
+        ':file',
+        dom.getChatCursor(),
+      );
+      dom.setChatText(text, cursor);
     },
   },
   {
@@ -37,7 +48,8 @@ export const chatShortcuts: Shortcut[] = [
     key: ':f',
     run(dom) {
       dom.focusSearch();
-      dom.setChatText(stripCommand(dom.getChatText(), ':f'));
+      const { text, cursor } = stripCommandWithCursor(dom.getChatText(), ':f', dom.getChatCursor());
+      dom.setChatText(text, cursor);
     },
   },
   {
@@ -45,7 +57,12 @@ export const chatShortcuts: Shortcut[] = [
     key: ':me',
     run(dom) {
       dom.filterMessages('me');
-      dom.setChatText(stripCommand(dom.getChatText(), ':me'));
+      const { text, cursor } = stripCommandWithCursor(
+        dom.getChatText(),
+        ':me',
+        dom.getChatCursor(),
+      );
+      dom.setChatText(text, cursor);
     },
   },
   {
@@ -53,7 +70,12 @@ export const chatShortcuts: Shortcut[] = [
     key: ':mine',
     run(dom) {
       dom.filterMessages('mine');
-      dom.setChatText(stripCommand(dom.getChatText(), ':mine'));
+      const { text, cursor } = stripCommandWithCursor(
+        dom.getChatText(),
+        ':mine',
+        dom.getChatCursor(),
+      );
+      dom.setChatText(text, cursor);
     },
   },
   {
@@ -61,7 +83,12 @@ export const chatShortcuts: Shortcut[] = [
     key: ':all',
     run(dom) {
       dom.filterMessages('all');
-      dom.setChatText(stripCommand(dom.getChatText(), ':all'));
+      const { text, cursor } = stripCommandWithCursor(
+        dom.getChatText(),
+        ':all',
+        dom.getChatCursor(),
+      );
+      dom.setChatText(text, cursor);
     },
   },
   {

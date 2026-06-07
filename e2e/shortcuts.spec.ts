@@ -28,6 +28,16 @@ test(':info → タグに展開される', async ({ page }) => {
   await expect(page.locator('#_chatText')).toHaveValue('[info]\n[/info]');
 });
 
+test(':info 展開後にカーソルがタグの内側に来る（Issue #3）', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':info');
+  await expect(page.locator('#_chatText')).toHaveValue('[info]\n[/info]');
+  const selectionStart = await page.$eval(
+    '#_chatText',
+    (el) => (el as HTMLTextAreaElement).selectionStart,
+  );
+  expect(selectionStart).toBe('[info]\n'.length);
+});
+
 test(':title / :code → タグに展開される', async ({ page }) => {
   await typeAndEnter(page, '#_chatText', ':title');
   await expect(page.locator('#_chatText')).toHaveValue('[title]\n[/title]');

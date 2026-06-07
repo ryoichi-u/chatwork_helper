@@ -1,4 +1,5 @@
-import { EXPANDABLE_TAGS, expandTag } from './expandTag';
+import { expandTagWithCursor } from './cursor';
+import { EXPANDABLE_TAGS } from './expandTag';
 import { chatShortcuts, taskShortcuts } from './registry';
 import type { ChatworkDom } from './types';
 
@@ -25,10 +26,11 @@ export function dispatchChatShortcuts(dom: ChatworkDom): boolean {
     }
   }
 
-  // タグ展開: `:info` / `:title` / `:code` → `[tag]\n[/tag]`
+  // タグ展開: `:info` / `:title` / `:code` → `[tag]\n[/tag]`（カーソルはタグの内側へ）
   for (const tag of EXPANDABLE_TAGS) {
     if (buildTriggerRegExp(`:${tag}`).test(dom.getChatText())) {
-      dom.setChatText(expandTag(dom.getChatText(), tag));
+      const { text, cursor } = expandTagWithCursor(dom.getChatText(), tag, dom.getChatCursor());
+      dom.setChatText(text, cursor);
       matched = true;
     }
   }

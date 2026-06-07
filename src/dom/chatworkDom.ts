@@ -12,9 +12,15 @@ export function createChatworkDom(doc: Document): ChatworkDom {
 
   return {
     getChatText: () => chatText()?.value ?? '',
-    setChatText(value: string) {
+    getChatCursor: () => chatText()?.selectionStart ?? 0,
+    setChatText(value: string, cursor?: number) {
       const el = chatText();
-      if (el) el.value = value;
+      if (!el) return;
+      el.value = value;
+      if (cursor !== undefined) {
+        const pos = Math.max(0, Math.min(cursor, value.length));
+        el.setSelectionRange(pos, pos);
+      }
     },
     focusChatText: () => chatText()?.focus(),
     getTaskText: () => taskInput()?.value ?? '',

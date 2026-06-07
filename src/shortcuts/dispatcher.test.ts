@@ -3,14 +3,17 @@ import { buildTriggerRegExp, dispatchChatShortcuts, dispatchTaskShortcuts } from
 import type { ChatworkDom } from './types';
 
 /** 呼び出し履歴を記録するテスト用 ChatworkDom */
-function fakeDom(initialChat = '', initialTask = '') {
+function fakeDom(initialChat = '', initialTask = '', initialCursor = 0) {
   let chat = initialChat;
   let task = initialTask;
+  let cursor = initialCursor;
   const calls: string[] = [];
   const dom: ChatworkDom = {
     getChatText: () => chat,
-    setChatText: (v) => {
+    getChatCursor: () => cursor,
+    setChatText: (v, c) => {
       chat = v;
+      if (c !== undefined) cursor = c;
     },
     focusChatText: () => calls.push('focusChatText'),
     getTaskText: () => task,
@@ -24,7 +27,7 @@ function fakeDom(initialChat = '', initialTask = '') {
     focusSearch: () => calls.push('focusSearch'),
     filterMessages: (mode) => calls.push(`filter:${mode}`),
   };
-  return { dom, calls, chat: () => chat, task: () => task };
+  return { dom, calls, chat: () => chat, task: () => task, cursor: () => cursor };
 }
 
 describe('buildTriggerRegExp', () => {
@@ -112,6 +115,12 @@ describe('dispatchChatShortcuts', () => {
     const f = fakeDom('メモ\n:info');
     dispatchChatShortcuts(f.dom);
     expect(f.chat()).toBe('メモ\n[info]\n[/info]');
+  });
+
+  it(':info 展開時にカーソルがタグの内側に来る（Issue #3）', () => {
+    const f = fakeDom(':info', '', 5);
+    dispatchChatShortcuts(f.dom);
+    expect(f.cursor()).toBe('[info]\n'.length);
   });
 
   it(':title / :code → タグに展開する', () => {

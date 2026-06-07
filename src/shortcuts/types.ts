@@ -7,7 +7,13 @@ export type FilterMode = 'me' | 'mine' | 'all';
  */
 export interface ChatworkDom {
   getChatText(): string;
-  setChatText(value: string): void;
+  /** チャット欄の現在のカーソル位置（selectionStart） */
+  getChatCursor(): number;
+  /**
+   * チャット欄のテキストを設定する。
+   * @param cursor 指定時は設定後にカーソル位置（selectionStart/End）を復元する（Issue #3）
+   */
+  setChatText(value: string, cursor?: number): void;
   focusChatText(): void;
   getTaskText(): string;
   setTaskText(value: string): void;
