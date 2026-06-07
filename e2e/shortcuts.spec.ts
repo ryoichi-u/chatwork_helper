@@ -105,6 +105,29 @@ test(':all → 全メッセージが再表示される', async ({ page }) => {
   await expect(page.locator('[data-mid="m-3"]')).toBeVisible();
 });
 
+test(':me フィルタ後に追加されたメッセージにも CSS が効く（Issue #4）', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':me');
+  // フィルタ適用後に新規メッセージを動的に追加
+  await page.evaluate(() => {
+    const msg = document.createElement('div');
+    msg.className = '_message';
+    msg.dataset.mid = 'm-late';
+    msg.textContent = '後から来た他人のメッセージ';
+    document.getElementById('timeline')?.appendChild(msg);
+  });
+  // 要素単位の操作なしでも CSS により隠れる
+  await expect(page.locator('[data-mid="m-late"]')).toBeHidden();
+});
+
+test('フィルタ中バナーの解除ボタンでフィルタが解除される（Issue #4）', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':me');
+  const banner = page.locator('#cwh-filter-banner');
+  await expect(banner).toBeVisible();
+  await banner.getByRole('button', { name: '解除' }).click();
+  await expect(banner).toHaveCount(0);
+  await expect(page.locator('[data-mid="m-3"]')).toBeVisible();
+});
+
 test(':task → 本文がタスク名入力欄へ移る', async ({ page }) => {
   await typeAndEnter(page, '#_chatText', 'バグを直す\n:task');
   await expect(page.locator('#_chatText')).toHaveValue('');
