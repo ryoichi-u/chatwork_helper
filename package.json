@@ -1,0 +1,32 @@
+{
+  "name": "chatwork-helper",
+  "description": "Google Chrome Extension for Chatwork",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "author": "ryoichi-u",
+  "homepage": "https://github.com/ryoichi-u/chatwork_helper",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "eslint": "9.39.4",
+    "eslint-config-prettier": "10.1.8",
+    "happy-dom": "20.10.2",
+    "prettier": "3.8.3",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.60.1",
+    "vitest": "4.1.8",
+    "wxt": "0.20.26"
+  }
+}

@@ -1,2 +1,23 @@
-*zip
+# OS
 *.DS_Store
+
+# Dependencies
+node_modules/
+
+# WXT
+.output/
+.wxt/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Playwright / E2E
+playwright/.auth/
+storageState*.json
+playwright-report/
+test-results/
+
+# Build artifacts
+*.zip

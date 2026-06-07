@@ -1,0 +1,8 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "exclude": ["node_modules", ".output", "chatworkHelper.js", "jquery-3.3.1.min.js"]
+}
