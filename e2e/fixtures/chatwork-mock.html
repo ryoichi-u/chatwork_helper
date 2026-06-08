@@ -25,12 +25,13 @@
         padding: 8px;
         gap: 8px;
       }
-      .roomListItem {
+      [data-testid='room-list_list'] {
+        margin: 0;
+        padding: 0;
+      }
+      [data-testid='room-list_list'] li {
         list-style: none;
         padding: 8px;
-      }
-      .roomListItem__roomName--unread {
-        font-weight: bold;
       }
       #main {
         flex: 1;
@@ -49,45 +50,52 @@
   <body>
     <div id="roomList">
       <div class="roomListHeader">
-        <div id="_sideChatMoveMyChat" role="button">マイチャット</div>
-        <!-- 全既読ボタンはここに注入される -->
+        <!-- 全既読ボタンはフィルタボタンの直前に注入される -->
+        <button data-testid="room-list-header_room-list-filter-button" type="button">絞り込み</button>
       </div>
-      <ul>
-        <li class="roomListItem" data-rid="100">
-          <p class="roomListItem__roomName--unread">未読ルームA</p>
+      <!-- 新 UI: ルームは li[data-rid][role=tab]、未読はバッジ要素で表す -->
+      <ul data-testid="room-list_list">
+        <li data-rid="100" role="tab" aria-label="未読ルームA">
+          <span class="_unreadBadge">2</span>未読ルームA
         </li>
-        <li class="roomListItem" data-rid="200">
-          <p class="roomListItem__roomName">既読ルームB</p>
-        </li>
-        <li class="roomListItem" data-rid="300">
-          <p class="roomListItem__roomName--unread">未読ルームC</p>
+        <li data-rid="200" role="tab" aria-label="既読ルームB">既読ルームB</li>
+        <li data-rid="300" role="tab" aria-label="未読ルームC">
+          <span class="_unreadBadge">1</span>未読ルームC
         </li>
       </ul>
     </div>
 
     <div id="main">
       <div id="timeline">
-        <div class="_message chatTimeLineMessageMention" data-rid="100" data-mid="m-1">
-          自分宛てメンション
+        <!-- 自分宛て TO（:me 対象）: data-cwtag="[To:MYID]" を含む -->
+        <div class="_message" data-rid="100" data-mid="m-1">
+          <div data-cwtag="[To:12345]"><button data-aid="12345" data-testid="user-icon"></button></div>
+          <span>自分宛てメンション</span>
         </div>
-        <div class="_message chatTimeLineMessageMine" data-rid="100" data-mid="m-2">
-          自分の送信メッセージ
+        <!-- 自分の送信（:mine 対象）: 送信者アバター ._speaker 内の data-aid=MYID -->
+        <div class="_message" data-rid="100" data-mid="m-2">
+          <div class="_speaker"><div data-aid="12345" data-testid="user-icon"></div></div>
+          <span>自分の送信メッセージ</span>
         </div>
-        <div class="_message" data-rid="100" data-mid="m-3">他人のメッセージ</div>
+        <!-- 他人のメッセージ: TO も自分アバターも無い -->
+        <div class="_message" data-rid="100" data-mid="m-3">
+          <div class="_speaker"><div data-aid="99999" data-testid="user-icon"></div></div>
+          <span>他人のメッセージ</span>
+        </div>
       </div>
 
-      <!-- TO リスト（ルームメンバー）— Issue #2 サジェストのソース -->
-      <div id="_toList">
-        <li data-account-id="111"><span class="toList__name">山田太郎</span></li>
-        <li data-account-id="222"><span class="toList__name">佐藤花子</span></li>
-        <li data-account-id="333"><span class="toList__name">Taro Yamada</span></li>
+      <!-- #2 メンバー候補（仮セレクタ data-cwh-member。実 UI 確定まで暫定） -->
+      <div id="memberSource">
+        <li data-cwh-member data-account-id="111"><span class="toList__name">山田太郎</span></li>
+        <li data-cwh-member data-account-id="222"><span class="toList__name">佐藤花子</span></li>
+        <li data-cwh-member data-account-id="333"><span class="toList__name">Taro Yamada</span></li>
       </div>
 
       <div id="controls">
-        <button id="_to" type="button">TO</button>
-        <button id="_file" type="button">ファイル</button>
+        <button data-testid="message-input-area_to_button" type="button">TO</button>
+        <button data-testid="message-input-area_send-tool_send-file" type="button">ファイル</button>
         <button id="_inchargeEmpty" type="button">担当者</button>
-        <input id="_search" type="text" placeholder="検索" />
+        <input data-testid="global-header_header-search" type="text" placeholder="検索" />
       </div>
 
       <h3>メッセージ入力</h3>

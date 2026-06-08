@@ -14,8 +14,9 @@ test.beforeEach(async ({ page, gatewayRequests }) => {
   void gatewayRequests; // route 登録を有効化
   await page.goto(MOCK_URL);
   await page.waitForSelector('#_chatText');
-  // content script の keydown リスナ登録を待つ
-  await page.waitForTimeout(300);
+  // content script が credentials 取得 → myid 設定するまで待つ
+  // （:me/:mine フィルタは myid 必須。全既読ボタン設置が取得完了の印）
+  await page.waitForSelector('#_openedButton');
 });
 
 test('@@ → [toall] に置換される', async ({ page }) => {
@@ -52,9 +53,11 @@ test(':to → TO リストボタンがクリックされコマンドが消える
     clicked = true;
   });
   await page.evaluate(() => {
-    document.querySelector('#_to')?.addEventListener('click', () => {
-      (window as unknown as { __markToClicked: () => void }).__markToClicked();
-    });
+    document
+      .querySelector('[data-testid="message-input-area_to_button"]')
+      ?.addEventListener('click', () => {
+        (window as unknown as { __markToClicked: () => void }).__markToClicked();
+      });
   });
   await typeAndEnter(page, '#_chatText', ':to');
   await expect(page.locator('#_chatText')).toHaveValue('');
@@ -67,9 +70,11 @@ test(':file → ファイルアップロードボタンがクリックされる'
     clicked = true;
   });
   await page.evaluate(() => {
-    document.querySelector('#_file')?.addEventListener('click', () => {
-      (window as unknown as { __markFileClicked: () => void }).__markFileClicked();
-    });
+    document
+      .querySelector('[data-testid="message-input-area_send-tool_send-file"]')
+      ?.addEventListener('click', () => {
+        (window as unknown as { __markFileClicked: () => void }).__markFileClicked();
+      });
   });
   await typeAndEnter(page, '#_chatText', ':file');
   await expect(page.locator('#_chatText')).toHaveValue('');
@@ -79,7 +84,7 @@ test(':file → ファイルアップロードボタンがクリックされる'
 test(':f → 検索ボックスにフォーカスが移る', async ({ page }) => {
   await typeAndEnter(page, '#_chatText', ':f');
   await expect(page.locator('#_chatText')).toHaveValue('');
-  await expect(page.locator('#_search')).toBeFocused();
+  await expect(page.locator('[data-testid="global-header_header-search"]')).toBeFocused();
 });
 
 test(':me → 自分宛て TO のメッセージのみ表示される', async ({ page }) => {

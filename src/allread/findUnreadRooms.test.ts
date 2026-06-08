@@ -1,19 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { findUnreadRooms } from './findUnreadRooms';
 
+// 未読バッジは実機調査で確定: li._unreadBadge（data-testid="unread-badge-*"）。
+
 describe('findUnreadRooms', () => {
-  it('未読バッジ付きルームのみ抽出する', () => {
+  it('未読ルームのみ抽出する', () => {
     document.body.innerHTML = `
       <ul>
-        <li class="roomListItem" data-rid="100">
-          <p class="roomListItem__roomName--unread">未読ルーム</p>
-        </li>
-        <li class="roomListItem" data-rid="200">
-          <p class="roomListItem__roomName">既読ルーム</p>
-        </li>
-        <li class="roomListItem" data-rid="300">
-          <p class="roomListItem__roomName--unread">未読ルーム2</p>
-        </li>
+        <li data-rid="100" role="tab"><span class="_unreadBadge">3</span></li>
+        <li data-rid="200" role="tab"></li>
+        <li data-rid="300" role="tab"><span class="_unreadBadge">1</span></li>
       </ul>
     `;
     expect(findUnreadRooms(document)).toEqual([
@@ -24,9 +20,7 @@ describe('findUnreadRooms', () => {
 
   it('DOM 上にメッセージがあれば最終メッセージ ID を拾う', () => {
     document.body.innerHTML = `
-      <li class="roomListItem" data-rid="100">
-        <p class="roomListItem__roomName--unread">未読ルーム</p>
-      </li>
+      <li data-rid="100" role="tab"><span class="_unreadBadge">1</span></li>
       <div class="_message" data-rid="100" data-mid="m-1"></div>
       <div class="_message" data-rid="100" data-mid="m-2"></div>
       <div class="_message" data-rid="999" data-mid="other"></div>
@@ -36,9 +30,7 @@ describe('findUnreadRooms', () => {
 
   it('未読ルームがなければ空配列', () => {
     document.body.innerHTML = `
-      <li class="roomListItem" data-rid="200">
-        <p class="roomListItem__roomName">既読ルーム</p>
-      </li>
+      <li data-rid="200" role="tab"></li>
     `;
     expect(findUnreadRooms(document)).toEqual([]);
   });

@@ -24,3 +24,6 @@ test-results/
 
 # Build artifacts
 *.zip
+
+# Local devtools (CDP自走調査用・コミット不要)
+.cwh-devtools/

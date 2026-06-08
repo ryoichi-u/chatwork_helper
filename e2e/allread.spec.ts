@@ -6,16 +6,17 @@ const MOCK_URL = 'https://www.chatwork.com/';
 test.beforeEach(async ({ page, gatewayRequests }) => {
   void gatewayRequests;
   await page.goto(MOCK_URL);
-  await page.waitForSelector('#_sideChatMoveMyChat');
+  await page.waitForSelector('[data-testid="room-list-header_room-list-filter-button"]');
+  // content script が credentials 取得 → 全既読ボタン設置するまで待つ
+  await page.waitForSelector('#_openedButton');
 });
 
-test('全既読ボタンがルーム一覧上部に設置される', async ({ page }) => {
+test('全既読ボタンがルーム一覧ヘッダに設置される', async ({ page }) => {
   const button = page.locator('#_openedButton');
   await expect(button).toBeVisible();
-  // マイチャットボタンと同じヘッダ（兄弟）に挿入されている
-  // （お気に入りトグルボタンも隣接するため厳密な直後隣接は問わない）
+  // フィルタボタンの直前に挿入されている
   await expect(
-    page.locator('#_sideChatMoveMyChat ~ #_openedButton, #_sideChatMoveMyChat + * #_openedButton'),
+    page.locator('#_openedButton + [data-testid="room-list-header_room-list-filter-button"]'),
   ).toHaveCount(1);
 });
 

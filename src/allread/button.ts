@@ -26,15 +26,20 @@ function createCheckIcon(doc: Document): SVGSVGElement {
 export function createAllReadButton(doc: Document): HTMLDivElement {
   const button = doc.createElement('div');
   button.id = ALL_READ_BUTTON_ID;
-  button.className = 'roomListHeader__myChatButton';
+  button.className = 'cwh-all-read-button';
   button.setAttribute('role', 'button');
   button.setAttribute('aria-label', 'すべて既読にする');
+  button.title = 'すべて既読にする';
+  // 新 UI には専用クラスが無いため自前で最低限のスタイルを当てる
+  button.style.cssText =
+    'display:inline-flex;align-items:center;justify-content:center;' +
+    'cursor:pointer;padding:4px;margin:0 4px;color:#7e8c99;';
   button.appendChild(createCheckIcon(doc));
   return button;
 }
 
 /**
- * 全既読ボタンをルーム一覧上部（マイチャットボタンの隣）に設置する。
+ * 全既読ボタンをルーム一覧ヘッダ（フィルタボタンの隣）に設置する。
  * 既存ボタンがあれば置き換える。挿入先が見つからなければ null。
  */
 export function attachAllReadButton(
@@ -43,11 +48,11 @@ export function attachAllReadButton(
 ): HTMLDivElement | null {
   doc.getElementById(ALL_READ_BUTTON_ID)?.remove();
 
-  const attachTo = doc.querySelector(SELECTORS.sideChatMoveMyChat);
+  const attachTo = doc.querySelector(SELECTORS.roomListFilterButton);
   if (!attachTo) return null;
 
   const button = createAllReadButton(doc);
   button.addEventListener('click', onClick);
-  attachTo.after(button);
+  attachTo.before(button);
   return button;
 }

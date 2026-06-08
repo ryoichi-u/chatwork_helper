@@ -1,24 +1,29 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { attachAllReadButton, createAllReadButton } from './button';
 
+const FILTER_BUTTON = '<div data-testid="room-list-header_room-list-filter-button"></div>';
+
 describe('createAllReadButton', () => {
-  it('旧実装と同じ ID / クラスのボタンを生成する', () => {
+  it('既定の ID / クラス / アイコンを持つボタンを生成する', () => {
     const button = createAllReadButton(document);
     expect(button.id).toBe('_openedButton');
-    expect(button.className).toBe('roomListHeader__myChatButton');
+    expect(button.className).toBe('cwh-all-read-button');
     expect(button.querySelector('svg')).not.toBeNull();
   });
 });
 
 describe('attachAllReadButton', () => {
   beforeEach(() => {
-    document.body.innerHTML = '<div id="_sideChatMoveMyChat"></div>';
+    document.body.innerHTML = FILTER_BUTTON;
   });
 
-  it('マイチャットボタンの直後に設置される', () => {
+  it('ルーム一覧フィルタボタンの直前に設置される', () => {
     const button = attachAllReadButton(document, () => {});
     expect(button).not.toBeNull();
-    expect(document.querySelector('#_sideChatMoveMyChat + #_openedButton')).toBe(button);
+    const filterBtn = document.querySelector(
+      '[data-testid="room-list-header_room-list-filter-button"]',
+    );
+    expect(button?.nextElementSibling).toBe(filterBtn);
   });
 
   it('クリックでハンドラが呼ばれる', () => {
