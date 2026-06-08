@@ -34,4 +34,11 @@ describe('extractFavoriteData', () => {
     const el = messageEl(`<div class="_message" data-mid="m-1" data-rid="100">${long}</div>`);
     expect(extractFavoriteData(el)?.text).toHaveLength(200);
   });
+
+  it('注入された「あとで読む」ボタンの文字を抜粋に含めない（review #1）', () => {
+    const el = messageEl(
+      '<div class="_message" data-mid="m-1" data-rid="100">本文テキスト<button class="cwh-fav-save">★ あとで読む</button></div>',
+    );
+    expect(extractFavoriteData(el)?.text).toBe('本文テキスト');
+  });
 });
