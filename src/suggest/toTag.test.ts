@@ -32,6 +32,19 @@ describe('findMentionToken', () => {
     expect(findMentionToken('mail@example', 12)).toBeNull();
   });
 
+  it('日本語で空白なしの @ も検出する（review #4）', () => {
+    expect(findMentionToken('おはよう@山田', 8)).toEqual({ start: 4, query: '山田' });
+  });
+
+  it('記号直後の @ も検出する（review #4）', () => {
+    expect(findMentionToken('(@sato', 6)).toEqual({ start: 1, query: 'sato' });
+  });
+
+  it('@@（全員宛てショートカット）はメンション扱いしない（review #4）', () => {
+    expect(findMentionToken('@@', 2)).toBeNull();
+    expect(findMentionToken('＠＠', 2)).toBeNull();
+  });
+
   it('クエリに空白が入ったら無効', () => {
     expect(findMentionToken('@山田 太郎', 6)).toBeNull();
   });

@@ -15,6 +15,19 @@ export function initMentionSuggest(doc: Document): void {
 
   const chatText = () => doc.querySelector<HTMLTextAreaElement>(SELECTORS.chatText);
 
+  /** 入力欄の矩形を基準にドロップダウンを描画する（位置指定込み・review #2） */
+  function paint(): void {
+    const el = chatText();
+    const rect = el?.getBoundingClientRect();
+    renderDropdown(
+      doc,
+      candidates,
+      activeIndex,
+      (member) => select(member),
+      rect ? { left: rect.left, bottom: rect.bottom, top: rect.top } : undefined,
+    );
+  }
+
   function refresh(): void {
     const el = chatText();
     if (!el) return;
@@ -30,7 +43,7 @@ export function initMentionSuggest(doc: Document): void {
       return;
     }
     activeIndex = 0;
-    renderDropdown(doc, candidates, activeIndex, (member) => select(member));
+    paint();
   }
 
   function select(member: RoomMember): void {
@@ -71,12 +84,12 @@ export function initMentionSuggest(doc: Document): void {
         case 'ArrowDown':
           event.preventDefault();
           activeIndex = (activeIndex + 1) % candidates.length;
-          renderDropdown(doc, candidates, activeIndex, (m) => select(m));
+          paint();
           break;
         case 'ArrowUp':
           event.preventDefault();
           activeIndex = (activeIndex - 1 + candidates.length) % candidates.length;
-          renderDropdown(doc, candidates, activeIndex, (m) => select(m));
+          paint();
           break;
         case 'Enter':
         case 'Tab': {

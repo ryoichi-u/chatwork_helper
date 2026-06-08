@@ -41,18 +41,41 @@ function ensureStyle(doc: Document): void {
   (doc.head ?? doc.documentElement).appendChild(style);
 }
 
+/** ドロップダウンの表示位置（入力欄の矩形を基準に配置する） */
+export interface DropdownAnchor {
+  left: number;
+  /** 入力欄の下端（ここを基準にドロップダウンを下に出す） */
+  bottom: number;
+  /** 入力欄の上端（下に出すと画面外になる場合に上へ出すため） */
+  top: number;
+}
+
 /** サジェストのドロップダウンを構築/更新する（DOM API のみ・innerHTML 不使用） */
 export function renderDropdown(
   doc: Document,
   members: RoomMember[],
   activeIndex: number,
   onSelect: (member: RoomMember) => void,
+  anchor?: DropdownAnchor,
 ): HTMLDivElement {
   ensureStyle(doc);
   doc.getElementById(DROPDOWN_ID)?.remove();
 
   const dropdown = doc.createElement('div');
   dropdown.id = DROPDOWN_ID;
+
+  // 入力欄の矩形を基準に位置を決める（review #2: 既定の左上固定を解消）
+  if (anchor) {
+    const view = doc.defaultView;
+    const viewportH = view?.innerHeight ?? 0;
+    dropdown.style.left = `${Math.round(anchor.left)}px`;
+    // 入力欄の下に十分な余白がなければ上側に出す
+    if (viewportH && anchor.bottom > viewportH - 120) {
+      dropdown.style.bottom = `${Math.round(viewportH - anchor.top)}px`;
+    } else {
+      dropdown.style.top = `${Math.round(anchor.bottom)}px`;
+    }
+  }
 
   members.forEach((member, index) => {
     const item = doc.createElement('div');

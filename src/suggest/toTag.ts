@@ -23,9 +23,14 @@ export interface MentionToken {
   query: string;
 }
 
+/** メールアドレスのローカル部に使われる ASCII 文字（この直後の `@` はメール扱い） */
+const EMAIL_LOCAL_CHAR = /[A-Za-z0-9._%+-]/;
+
 /**
  * カーソル位置の直前にある `@クエリ` を取り出す。
- * - `@` は行頭または空白の直後にあるもののみ対象（メールアドレス等の誤検出を防ぐ）
+ * - `@` の直前が ASCII 英数字等（メールのローカル部）の場合のみ除外する。
+ *   日本語のように単語を空白で区切らない入力（例: `おはよう@山田`）でも発火させるため、
+ *   行頭・空白・記号・CJK 文字の直後はすべて対象とする（review #4）。
  * - クエリに空白を含む場合はトークン終了とみなし null
  */
 export function findMentionToken(text: string, cursor: number): MentionToken | null {
@@ -33,9 +38,11 @@ export function findMentionToken(text: string, cursor: number): MentionToken | n
   const atIndex = before.lastIndexOf('@');
   if (atIndex < 0) return null;
 
-  // `@` の直前が行頭または空白でなければ対象外
-  const prevChar = atIndex > 0 ? before[atIndex - 1] : '\n';
-  if (prevChar !== undefined && !/\s/.test(prevChar)) return null;
+  // `@` の直前が ASCII のメールローカル部文字なら（foo@... のような）メール扱いで除外
+  const prevChar = atIndex > 0 ? before[atIndex - 1] : '';
+  if (prevChar !== undefined && prevChar !== '' && EMAIL_LOCAL_CHAR.test(prevChar)) return null;
+  // 直前が `@`/`＠` の場合は全員宛て `@@` ショートカットなのでメンション扱いしない
+  if (prevChar === '@' || prevChar === '＠') return null;
 
   const query = before.slice(atIndex + 1);
   if (/\s/.test(query)) return null; // 空白を含んだらトークン終了
@@ -43,7 +50,7 @@ export function findMentionToken(text: string, cursor: number): MentionToken | n
   return { start: atIndex, query };
 }
 
-/** メンバー名・アカウント ID で前方一致（大文字小文字無視）フィルタする */
+/** メンバー名・アカウント ID で部分一致（大文字小文字無視）フィルタする */
 export function filterMembers(members: RoomMember[], query: string): RoomMember[] {
   const q = query.toLowerCase();
   if (q === '') return members;

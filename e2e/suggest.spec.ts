@@ -50,3 +50,17 @@ test('Esc でサジェストを閉じる', async ({ page }) => {
   await page.press('#_chatText', 'Escape');
   await expect(page.locator('#cwh-mention-dropdown')).toHaveCount(0);
 });
+
+test('ドロップダウンが入力欄付近に配置される（左上固定でない・review #2）', async ({ page }) => {
+  await page.focus('#_chatText');
+  await page.type('#_chatText', '@山');
+  const dropdown = page.locator('#cwh-mention-dropdown');
+  await expect(dropdown).toBeVisible();
+  const box = await dropdown.boundingBox();
+  const inputBox = await page.locator('#_chatText').boundingBox();
+  expect(box).not.toBeNull();
+  expect(inputBox).not.toBeNull();
+  // 入力欄の左端付近に配置され、画面左上(0,0)固定ではない
+  expect(Math.abs(box!.x - inputBox!.x)).toBeLessThan(5);
+  expect(box!.y).toBeGreaterThan(10);
+});
