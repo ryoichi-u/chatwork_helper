@@ -1,2 +1,29 @@
-*zip
+# OS
 *.DS_Store
+
+# Claude Code (local)
+.claude/
+
+# Dependencies
+node_modules/
+
+# WXT
+.output/
+.wxt/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Playwright / E2E
+playwright/.auth/
+storageState*.json
+playwright-report/
+test-results/
+
+# Build artifacts
+*.zip
+
+# Local devtools (CDP自走調査用・コミット不要)
+.cwh-devtools/

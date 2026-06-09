@@ -1,0 +1,155 @@
+import { expect, test } from './fixtures';
+import type { Page } from '@playwright/test';
+
+const MOCK_URL = 'https://www.chatwork.com/';
+
+/** チャット欄に値を入れて Enter を押す（content script が IME 非変換 Enter を検知する） */
+async function typeAndEnter(page: Page, selector: string, value: string) {
+  await page.fill(selector, value);
+  await page.focus(selector);
+  await page.press(selector, 'Enter');
+}
+
+test.beforeEach(async ({ page, gatewayRequests }) => {
+  void gatewayRequests; // route 登録を有効化
+  await page.goto(MOCK_URL);
+  await page.waitForSelector('#_chatText');
+  // content script が credentials 取得 → myid 設定するまで待つ
+  // （:me/:mine フィルタは myid 必須。全既読ボタン設置が取得完了の印）
+  await page.waitForSelector('#_openedButton');
+});
+
+test('@@ → [toall] に置換される', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', '@@');
+  await expect(page.locator('#_chatText')).toHaveValue('[toall]');
+});
+
+test(':info → タグに展開される', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':info');
+  await expect(page.locator('#_chatText')).toHaveValue('[info]\n[/info]');
+});
+
+test(':info 展開後にカーソルがタグの内側に来る（Issue #3）', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':info');
+  await expect(page.locator('#_chatText')).toHaveValue('[info]\n[/info]');
+  const selectionStart = await page.$eval(
+    '#_chatText',
+    (el) => (el as HTMLTextAreaElement).selectionStart,
+  );
+  expect(selectionStart).toBe('[info]\n'.length);
+});
+
+test(':title / :code → タグに展開される', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':title');
+  await expect(page.locator('#_chatText')).toHaveValue('[title]\n[/title]');
+
+  await typeAndEnter(page, '#_chatText', ':code');
+  await expect(page.locator('#_chatText')).toHaveValue('[code]\n[/code]');
+});
+
+test(':to → TO リストボタンがクリックされコマンドが消える', async ({ page }) => {
+  let clicked = false;
+  await page.exposeFunction('__markToClicked', () => {
+    clicked = true;
+  });
+  await page.evaluate(() => {
+    document
+      .querySelector('[data-testid="message-input-area_to_button"]')
+      ?.addEventListener('click', () => {
+        (window as unknown as { __markToClicked: () => void }).__markToClicked();
+      });
+  });
+  await typeAndEnter(page, '#_chatText', ':to');
+  await expect(page.locator('#_chatText')).toHaveValue('');
+  expect(clicked).toBe(true);
+});
+
+test(':file → ファイルアップロードボタンがクリックされる', async ({ page }) => {
+  let clicked = false;
+  await page.exposeFunction('__markFileClicked', () => {
+    clicked = true;
+  });
+  await page.evaluate(() => {
+    document
+      .querySelector('[data-testid="message-input-area_send-tool_send-file"]')
+      ?.addEventListener('click', () => {
+        (window as unknown as { __markFileClicked: () => void }).__markFileClicked();
+      });
+  });
+  await typeAndEnter(page, '#_chatText', ':file');
+  await expect(page.locator('#_chatText')).toHaveValue('');
+  expect(clicked).toBe(true);
+});
+
+test(':f → 検索ボックスにフォーカスが移る', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':f');
+  await expect(page.locator('#_chatText')).toHaveValue('');
+  await expect(page.locator('[data-testid="global-header_header-search"]')).toBeFocused();
+});
+
+test(':me → 自分宛て TO のメッセージのみ表示される', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':me');
+  await expect(page.locator('[data-mid="m-1"]')).toBeVisible();
+  await expect(page.locator('[data-mid="m-2"]')).toBeHidden();
+  await expect(page.locator('[data-mid="m-3"]')).toBeHidden();
+});
+
+test(':mine → 自分の送信メッセージのみ表示される', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':mine');
+  await expect(page.locator('[data-mid="m-1"]')).toBeHidden();
+  await expect(page.locator('[data-mid="m-2"]')).toBeVisible();
+  await expect(page.locator('[data-mid="m-3"]')).toBeHidden();
+});
+
+test(':all → 全メッセージが再表示される', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':me');
+  await expect(page.locator('[data-mid="m-3"]')).toBeHidden();
+  await typeAndEnter(page, '#_chatText', ':all');
+  await expect(page.locator('[data-mid="m-1"]')).toBeVisible();
+  await expect(page.locator('[data-mid="m-2"]')).toBeVisible();
+  await expect(page.locator('[data-mid="m-3"]')).toBeVisible();
+});
+
+test(':me フィルタ後に追加されたメッセージにも CSS が効く（Issue #4）', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':me');
+  // フィルタ適用後に新規メッセージを動的に追加
+  await page.evaluate(() => {
+    const msg = document.createElement('div');
+    msg.className = '_message';
+    msg.dataset.mid = 'm-late';
+    msg.textContent = '後から来た他人のメッセージ';
+    document.getElementById('timeline')?.appendChild(msg);
+  });
+  // 要素単位の操作なしでも CSS により隠れる
+  await expect(page.locator('[data-mid="m-late"]')).toBeHidden();
+});
+
+test('フィルタ中バナーの解除ボタンでフィルタが解除される（Issue #4）', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', ':me');
+  const banner = page.locator('#cwh-filter-banner');
+  await expect(banner).toBeVisible();
+  await banner.getByRole('button', { name: '解除' }).click();
+  await expect(banner).toHaveCount(0);
+  await expect(page.locator('[data-mid="m-3"]')).toBeVisible();
+});
+
+test(':task → 本文がタスク名入力欄へ移る', async ({ page }) => {
+  await typeAndEnter(page, '#_chatText', 'バグを直す\n:task');
+  await expect(page.locator('#_chatText')).toHaveValue('');
+  await expect(page.locator('#_taskNameInput')).toHaveValue('バグを直す\n');
+});
+
+test('タスク欄の :to → 担当者リストボタンがクリックされる', async ({ page }) => {
+  let clicked = false;
+  await page.exposeFunction('__markInchargeClicked', () => {
+    clicked = true;
+  });
+  await page.evaluate(() => {
+    document.querySelector('#_inchargeEmpty')?.addEventListener('click', () => {
+      (window as unknown as { __markInchargeClicked: () => void }).__markInchargeClicked();
+    });
+  });
+  await typeAndEnter(page, '#_taskNameInput', 'レビュー\n:to');
+  expect(clicked).toBe(true);
+  await expect(page.locator('#_taskNameInput')).toHaveValue('レビュー\n');
+});

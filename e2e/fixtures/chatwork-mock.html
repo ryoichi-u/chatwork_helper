@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chatwork Mock</title>
+    <!-- ページグローバル変数（MAIN world の page-bridge が読む対象） -->
+    <script>
+      window.MYID = '12345';
+      window.ACCESS_TOKEN = 'mock-access-token';
+      window.CLIENT_VER = '2.0';
+      window.LANGUAGE = 'ja';
+    </script>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        display: flex;
+      }
+      #roomList {
+        width: 240px;
+        border-right: 1px solid #ccc;
+      }
+      .roomListHeader {
+        display: flex;
+        padding: 8px;
+        gap: 8px;
+      }
+      [data-testid='room-list_list'] {
+        margin: 0;
+        padding: 0;
+      }
+      [data-testid='room-list_list'] li {
+        list-style: none;
+        padding: 8px;
+      }
+      #main {
+        flex: 1;
+        padding: 16px;
+      }
+      ._message {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+      }
+      textarea {
+        width: 100%;
+        height: 80px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="roomList">
+      <div class="roomListHeader">
+        <!-- 全既読ボタンはフィルタボタンの直前に注入される -->
+        <button data-testid="room-list-header_room-list-filter-button" type="button">
+          絞り込み
+        </button>
+      </div>
+      <!-- 新 UI: ルームは li[data-rid][role=tab]、未読はバッジ要素で表す -->
+      <ul data-testid="room-list_list">
+        <li data-rid="100" role="tab" aria-label="未読ルームA">
+          <span class="_unreadBadge">2</span>未読ルームA
+        </li>
+        <li data-rid="200" role="tab" aria-label="既読ルームB">既読ルームB</li>
+        <li data-rid="300" role="tab" aria-label="未読ルームC">
+          <span class="_unreadBadge">1</span>未読ルームC
+        </li>
+      </ul>
+    </div>
+
+    <div id="main">
+      <div id="timeline">
+        <!-- 自分宛て TO（:me 対象）: data-cwtag="[To:MYID]" を含む -->
+        <div class="_message" data-rid="100" data-mid="m-1">
+          <div data-cwtag="[To:12345]">
+            <button data-aid="12345" data-testid="user-icon"></button>
+          </div>
+          <span>自分宛てメンション</span>
+        </div>
+        <!-- 自分の送信（:mine 対象）: 送信者アバター ._speaker 内の data-aid=MYID -->
+        <div class="_message" data-rid="100" data-mid="m-2">
+          <div class="_speaker"><div data-aid="12345" data-testid="user-icon"></div></div>
+          <span>自分の送信メッセージ</span>
+        </div>
+        <!-- 他人のメッセージ: TO も自分アバターも無い -->
+        <div class="_message" data-rid="100" data-mid="m-3">
+          <div class="_speaker"><div data-aid="99999" data-testid="user-icon"></div></div>
+          <span>他人のメッセージ</span>
+        </div>
+      </div>
+
+      <!-- #2 メンバー候補（ルームヘッダのメンバーアバター: data-source=timeline_room_member_profile） -->
+      <div id="memberSource">
+        <div data-source="timeline_room_member_profile" data-aid="111"><img alt="山田太郎" /></div>
+        <div data-source="timeline_room_member_profile" data-aid="222"><img alt="佐藤花子" /></div>
+        <div data-source="timeline_room_member_profile" data-aid="333">
+          <img alt="Taro Yamada" />
+        </div>
+      </div>
+
+      <div id="controls">
+        <button data-testid="message-input-area_to_button" type="button">TO</button>
+        <button data-testid="message-input-area_send-tool_send-file" type="button">ファイル</button>
+        <button id="_inchargeEmpty" type="button">担当者</button>
+        <input data-testid="global-header_header-search" type="text" placeholder="検索" />
+      </div>
+
+      <h3>メッセージ入力</h3>
+      <textarea id="_chatText"></textarea>
+
+      <h3>タスク作成</h3>
+      <textarea id="_taskNameInput"></textarea>
+    </div>
+  </body>
+</html>
