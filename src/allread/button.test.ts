@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { attachAllReadButton, createAllReadButton } from './button';
 
-const FILTER_BUTTON = '<div data-testid="room-list-header_room-list-filter-button"></div>';
+// 実 UI 同様、フィルタボタンを flex 行の中に置く（直前に全既読が横並びで入る）
+const FILTER_BUTTON =
+  '<div style="display:flex"><div data-testid="room-list-header_room-list-filter-button"></div></div>';
 
 describe('createAllReadButton', () => {
   it('既定の ID / クラス / アイコンを持つボタンを生成する', () => {

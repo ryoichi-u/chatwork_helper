@@ -41,6 +41,10 @@ export function createAllReadButton(doc: Document): HTMLDivElement {
 /**
  * 全既読ボタンをルーム一覧ヘッダ（フィルタボタンの隣）に設置する。
  * 既存ボタンがあれば置き換える。挿入先が見つからなければ null。
+ *
+ * フィルタボタンの直接の親は display:block のラッパなので、そこへ入れると
+ * 縦積みになり崩れる。フィルタボタンを内包する flex 行まで遡り、その行の
+ * item（フィルタボタン側のブロック）の直前に挿入して横並びにする。
  */
 export function attachAllReadButton(
   doc: Document,
@@ -48,11 +52,20 @@ export function attachAllReadButton(
 ): HTMLDivElement | null {
   doc.getElementById(ALL_READ_BUTTON_ID)?.remove();
 
-  const attachTo = doc.querySelector(SELECTORS.roomListFilterButton);
-  if (!attachTo) return null;
+  const filterButton = doc.querySelector(SELECTORS.roomListFilterButton);
+  if (!filterButton) return null;
 
   const button = createAllReadButton(doc);
   button.addEventListener('click', onClick);
-  attachTo.before(button);
+
+  // フィルタボタンを含む flex 行を探し、その行の直接の子（= anchor）の前に挿入する
+  const view = doc.defaultView;
+  let anchor: Element = filterButton;
+  let parent = filterButton.parentElement;
+  while (parent && view && view.getComputedStyle(parent).display !== 'flex') {
+    anchor = parent;
+    parent = parent.parentElement;
+  }
+  anchor.before(button);
   return button;
 }
