@@ -2,22 +2,23 @@ import { SELECTORS } from '../dom/selectors';
 import type { RoomMember } from './toTag';
 
 /**
- * TO リスト DOM からルームメンバー一覧を読み取る（Issue #2）。
+ * ルームメンバー一覧を DOM から読み取る（Issue #2）。
  *
- * ⚠ PoC: セレクタ・属性名は実 Chatwork の DOM に合わせてスモーク検証が必要。
- * 各メンバー要素から `data-account-id` とメンバー名テキストを取り出す。
+ * 新 UI（2026-06）ではルームヘッダにメンバーアバターが並ぶ。各アバターは
+ * `[data-source="timeline_room_member_profile"]` で、`data-aid` に account_id、
+ * 子 `img` の `alt` に表示名を持つ（実機調査で確定）。
  */
 export function readRoomMembers(root: ParentNode): RoomMember[] {
   const members: RoomMember[] = [];
   const seen = new Set<string>();
 
-  for (const el of root.querySelectorAll<HTMLElement>(SELECTORS.toListMember)) {
-    const accountId = el.dataset.accountId;
+  for (const el of root.querySelectorAll<HTMLElement>(SELECTORS.roomMemberIcon)) {
+    const accountId = el.dataset.aid;
     if (!accountId || seen.has(accountId)) continue;
 
-    // 名前は専用要素 → なければ要素テキストの順で取得
-    const nameEl = el.querySelector<HTMLElement>('[class*="name" i]');
-    const name = (nameEl?.textContent ?? el.textContent ?? '').replace(/\s+/g, ' ').trim();
+    // 名前はアバター img の alt → 要素テキストの順で取得
+    const img = el.querySelector('img');
+    const name = (img?.getAttribute('alt') ?? el.textContent ?? '').replace(/\s+/g, ' ').trim();
     if (!name) continue;
 
     seen.add(accountId);

@@ -31,11 +31,10 @@ export const SELECTORS = {
   unreadBadge: '._unreadBadge, [data-testid*="unread-badge" i]',
 
   /**
-   * #2 メンションサジェストのメンバー候補要素。
-   * ⚠ 新 UI では旧 `#_toList [data-account-id]` が存在しない。TO ピッカー DOM の
-   * 構造が未確定のため仮置き（要実機調査）。確定するまでサジェストは候補ゼロになる。
+   * #2 メンションサジェストのメンバー候補（ルームヘッダのメンバーアバター一覧）。
+   * data-aid に account_id、子 img の alt に名前を持つ。実機調査で確定。
    */
-  toListMember: '[data-cwh-member][data-account-id]',
+  roomMemberIcon: '[data-source="timeline_room_member_profile"]',
 
   /** タイムラインのメッセージ要素 */
   message: '._message',
