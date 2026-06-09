@@ -51,7 +51,9 @@
     <div id="roomList">
       <div class="roomListHeader">
         <!-- 全既読ボタンはフィルタボタンの直前に注入される -->
-        <button data-testid="room-list-header_room-list-filter-button" type="button">絞り込み</button>
+        <button data-testid="room-list-header_room-list-filter-button" type="button">
+          絞り込み
+        </button>
       </div>
       <!-- 新 UI: ルームは li[data-rid][role=tab]、未読はバッジ要素で表す -->
       <ul data-testid="room-list_list">
@@ -69,7 +71,9 @@
       <div id="timeline">
         <!-- 自分宛て TO（:me 対象）: data-cwtag="[To:MYID]" を含む -->
         <div class="_message" data-rid="100" data-mid="m-1">
-          <div data-cwtag="[To:12345]"><button data-aid="12345" data-testid="user-icon"></button></div>
+          <div data-cwtag="[To:12345]">
+            <button data-aid="12345" data-testid="user-icon"></button>
+          </div>
           <span>自分宛てメンション</span>
         </div>
         <!-- 自分の送信（:mine 対象）: 送信者アバター ._speaker 内の data-aid=MYID -->
@@ -88,7 +92,9 @@
       <div id="memberSource">
         <div data-source="timeline_room_member_profile" data-aid="111"><img alt="山田太郎" /></div>
         <div data-source="timeline_room_member_profile" data-aid="222"><img alt="佐藤花子" /></div>
-        <div data-source="timeline_room_member_profile" data-aid="333"><img alt="Taro Yamada" /></div>
+        <div data-source="timeline_room_member_profile" data-aid="333">
+          <img alt="Taro Yamada" />
+        </div>
       </div>
 
       <div id="controls">
