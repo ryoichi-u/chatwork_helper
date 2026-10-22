@@ -1,7 +1,7 @@
 {
   "name": "chatwork-helper",
   "description": "Google Chrome Extension for Chatwork",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "type": "module",
   "author": "ryoichi-u",
