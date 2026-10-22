@@ -31,7 +31,8 @@
     "prettier": "3.8.3",
     "typescript": "5.9.3",
     "typescript-eslint": "8.60.1",
-    "vitest": "4.1.8",
-    "wxt": "0.20.26"
+    "vite": "8.3.3",
+    "vitest": "4.1.12",
+    "wxt": "0.21.4"
   }
 }
